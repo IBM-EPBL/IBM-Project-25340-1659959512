@@ -1,0 +1,89 @@
+
+/*  Make a smart home in tinkercad useing 2+  
+    sensors ,LED,buzzer in a single code and circuit :
+  @ Temperature sensor setup for control the motor(fan) speed
+    w.r.t temperature indicators(lights(RGB),LED & buzzer)
+  @ Photo sensor setup for control the intensity of optical     
+    source potential level
+  @ PIR sensor Setup for motion detector with indicators-LED  
+    and buzzer */
+void setup()
+{
+  Serial.begin(14400);  //Baud Rate
+   pinMode(11,OUTPUT);  //digital pin declaration
+   pinMode(3,OUTPUT);
+   pinMode(5,OUTPUT);
+   pinMode(12,OUTPUT);
+   pinMode(12,OUTPUT);
+   pinMode(8,OUTPUT);
+   pinMode(4,OUTPUT);
+   pinMode(2,OUTPUT);
+  
+}
+
+
+void loop()
+{
+ 
+  double s= analogRead(A5); //optical resistor analog read
+ //4 level LED o/p inverse instead of photo resister signal
+ //Max levelof digital read for photo_R=169,analog_Write=255
+                    
+  if(s<=42)
+       analogWrite(11,255);
+  else if (s<=84) 
+      analogWrite(11,128);
+  else if(s<=126)
+       analogWrite(11,64);
+  else
+     {   analogWrite(11,0);
+          tone(3,500,50);   //sonic signal
+     } 
+  double data=analogRead(A4);
+  double n=data/1024;
+  double volt=n*5;
+  double off=volt-0.5;
+  double t=off*100;
+  Serial.println("Temperature value:");
+  Serial.println(t);
+  //4 level temperature indicater ORGB,3 level motor speed
+  if(t<=0)
+         { digitalWrite(4,HIGH);
+ // Indicate Red signal when Negative_temp
+           digitalWrite(8,LOW); } 
+ // temp value oscillates b/w +&-
+  else if(t<=50)
+         { digitalWrite(4,LOW);
+ //Indicate Green signal when temp 0-50c
+           digitalWrite(8,LOW);
+           digitalWrite(12,HIGH);
+           analogWrite(5,64); }
+//(25%,1.25v);Control motor speed
+  else if(t<=100)
+         { digitalWrite(12,LOW); 
+  //Indicate Blue signal when temp 50-100c
+           digitalWrite(13,LOW);
+           digitalWrite(8,HIGH);
+           analogWrite(5,128);   }
+//(50%,2.5v);Control motor speed
+  else
+         { 
+           digitalWrite(8,LOW);  
+//Indicate Red signal when temp above 100c
+           digitalWrite(13,HIGH);
+           analogWrite(5,255);     
+ //(100%,5v);Control motor speed 
+           tone(3,1000,100);       } //Sonic signal
+  
+  int m=digitalRead(A3);  //Motion sensor(Boolian logic)
+  if(m==1)
+  {
+    digitalWrite(2,HIGH); 
+ // Indicate Green signal when motion detected
+    tone(3,1500,50);       // sonic signal
+    delay(700);
+  }
+  else
+    digitalWrite(2,LOW);
+  }
+ 

@@ -1,0 +1,28 @@
+ 
+"""
+Build a python code,Assume u get temperature
+and humidity values(generated with random function to a variable) 
+and write a condition to continuosly detect alarm in case of high teperature
+"""
+
+import numpy as np        #Header for number related function
+import winsound as ws     #Header for sound raise
+import time               #Header for time related function
+
+n=int(input("Enter the range of random inputs :"))   #Gets the number of inputs
+a=np.random.randint(1,120,n)     #Random temperature generates from 1-120 degrees
+
+                           #Loop for checking all the temperature
+for i in range (len(a)):        
+    print("current temperature is ",a[i])   #dislay the current temperature value
+    if (a[i]>=60):            #checking temperture level      
+        ws.Beep(2850,150)     #if above 60 degree's alerm is ON to 150 ms
+        time.sleep(0.1)       #delay for 100ms
+        ws.Beep(2850,150)
+        time.sleep(0.1)
+        print("alert !!,current temerature is:",a[i])
+    else:
+        print("Normal temperature ")
+            
+ 
+
